@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
+using SeleniumExtras.PageObjects;
+using SeleniumExtras.WaitHelpers;
 
 namespace WebDriverTask3
 {
@@ -10,127 +10,161 @@ namespace WebDriverTask3
         private readonly IWebDriver _driver;
         private readonly WebDriverWait _wait;
 
-        private const string Url = "https://cloud.google.com/products/calculator";
+        private const string URL = "https://cloud.google.com/products/calculator";
+        #region Locators
+        [FindsBy(How = How.XPath, Using = "//button[@class='UywwFc-LgbsSe UywwFc-LgbsSe-OWXEXe-Bz112c-M1Soyc UywwFc-LgbsSe-OWXEXe-dgl2Hf xhASFc']")]
+        private IWebElement addToEstimateButton;
 
-        private readonly Dictionary<string, By> locators = new Dictionary<string, By>()
-        {
-            { "addToEstimateButton", By.XPath("//button[@class='UywwFc-LgbsSe UywwFc-LgbsSe-OWXEXe-Bz112c-M1Soyc UywwFc-LgbsSe-OWXEXe-dgl2Hf xhASFc']") },
-            { "computeEngineButton", By.XPath("(//div[@role='button'])[2]") },
-            { "numOfInstances", By.XPath("//input[@value='1']") },
-            { "operatingSystemDropdown", By.XPath("//div[@data-field-input-type='2']") },
-            { "operatingSystemOption", By.XPath("//li[@data-value='free-debian-centos-coreos-ubuntu-or-byol-bring-your-own-license']") },
-            { "provisioningRadioButton", By.XPath("//div[@class='xJ0wqe']") },
-            { "machineFamilyDropdown", By.XPath("(//div[@class='VfPpkd-aPP78e'])[5]") },
-            { "machineFamilyOption", By.XPath("//li[@data-value='general-purpose']") },
-            { "seriesDropdown", By.XPath("(//div[@class='VfPpkd-aPP78e'])[6]") },
-            { "seriesOption", By.XPath("//li[@data-value='n1']") },
-            { "machineTypeDropdown", By.XPath("(//div[@class='VfPpkd-aPP78e'])[7]") },
-            { "machineTypeOption", By.XPath("//li[@data-value='n1-standard-8']") },
-            { "addGPUsButton", By.XPath("//button[@aria-label='Add GPUs']") },
-            { "gpuModelDropdown", By.XPath("/html/body/c-wiz[1]/div/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div/div[2]/div[3]/div[23]/div/div[1]/div/div/div/div[1]/div") },
-            { "gpuModelOption", By.XPath("//li[@data-value='nvidia-tesla-v100']") },
-            { "numOfGPUsDropDown", By.XPath("(//div[@class='VfPpkd-aPP78e'])[9]") },
-            { "numOfGPUsOption", By.XPath("//li[@data-value='1']") },
-            { "storageDropdown", By.XPath("(//div[@class='VfPpkd-aPP78e'])[10]") },
-            { "storageOption", By.XPath("/html/body/c-wiz[1]/div/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div/div[2]/div[3]/div[27]/div/div[1]/div/div/div/div[2]/ul/li[3]") },
-            { "regionDropdown", By.XPath("(//div[@class='VfPpkd-aPP78e'])[11]") },
-            { "regionOption", By.XPath("//li[@data-value='europe-west4']") },
-            { "shareButton", By.XPath("//button[@aria-label='Open Share Estimate dialog']") },
-            { "openEstimateSummary", By.XPath("//a[@track-name='open estimate summary']") },
-            { "closeClick", By.XPath("//button[@aria-label='Close dialog']") }
-        };
+        [FindsBy(How = How.XPath, Using = "(//div[@role='button'])[2]")]
+        private IWebElement computeEngineButton;
 
+        [FindsBy(How = How.XPath, Using = "//input[@value='1']")]
+        private IWebElement numOfInstances;
+
+        [FindsBy(How = How.XPath, Using = "//div[@data-field-input-type='2']")]
+        private IWebElement operatingSystemDropdown;
+
+        [FindsBy(How = How.XPath, Using = "//li[@data-value='free-debian-centos-coreos-ubuntu-or-byol-bring-your-own-license']")]
+        private IWebElement operatingSystemOption;
+
+        [FindsBy(How = How.XPath, Using = "//div[@class='xJ0wqe']")]
+        private IWebElement provisioningRadioButton;
+
+        [FindsBy(How = How.XPath, Using = "(//div[@class='VfPpkd-aPP78e'])[5]")]
+        private IWebElement machineFamilyDropdown;
+
+        [FindsBy(How = How.XPath, Using = "//li[@data-value='general-purpose']")]
+        private IWebElement machineFamilyOption;
+
+        [FindsBy(How = How.XPath, Using = "(//div[@class='VfPpkd-aPP78e'])[6]")]
+        private IWebElement seriesDropdown;
+
+        [FindsBy(How = How.XPath, Using = "//li[@data-value='n1']")]
+        private IWebElement seriesOption;
+
+        [FindsBy(How = How.XPath, Using = "(//div[@class='VfPpkd-aPP78e'])[7]")]
+        private IWebElement machineTypeDropdown;
+
+        [FindsBy(How = How.XPath, Using = "//li[@data-value='n1-standard-8']")]
+        private IWebElement machineTypeOption;
+
+        [FindsBy(How = How.XPath, Using = "//button[@aria-label='Add GPUs']")]
+        private IWebElement addGPUsButton;
+
+        [FindsBy(How = How.XPath, Using = "/html/body/c-wiz[1]/div/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div/div[2]/div[3]/div[23]/div/div[1]/div/div/div/div[1]/div")]
+        private IWebElement gpuModelDropdown;
+
+        [FindsBy(How = How.XPath, Using = "//li[@data-value='nvidia-tesla-v100']")]
+        private IWebElement gpuModelOption;
+
+        [FindsBy(How = How.XPath, Using = "(//div[@class='VfPpkd-aPP78e'])[9]")]
+        private IWebElement numOfGPUsDropDown;
+
+        [FindsBy(How = How.XPath, Using = "//li[@data-value='1']")]
+        private IWebElement numOfGPUsOption;
+
+        [FindsBy(How = How.XPath, Using = "(//div[@class='VfPpkd-aPP78e'])[10]")]
+        private IWebElement storageDropdown;
+
+        [FindsBy(How = How.XPath, Using = "/html/body/c-wiz[1]/div/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div/div[2]/div[3]/div[27]/div/div[1]/div/div/div/div[2]/ul/li[3]")]
+        private IWebElement storageOption;
+
+        [FindsBy(How = How.XPath, Using = "(//div[@class='VfPpkd-aPP78e'])[11]")]
+        private IWebElement regionDropdown;
+
+        [FindsBy(How = How.XPath, Using = "//li[@data-value='europe-west4']")]
+        private IWebElement regionOption;
+
+        [FindsBy(How = How.XPath, Using = "//button[@aria-label='Open Share Estimate dialog']")]
+        private IWebElement shareButton;
+
+        [FindsBy(How = How.XPath, Using = "//a[@track-name='open estimate summary']")]
+        private IWebElement openEstimateSummary;
+        #endregion
+#pragma warning disable CS8618
         public GoogleCloudProductPricingPage(IWebDriver driver)
+#pragma warning restore CS8618
         {
             _driver = driver;
             _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            PageFactory.InitElements(_driver, this);
         }
 
         public void NavigateToPage()
         {
-            _driver.Navigate().GoToUrl(Url);
+            _driver.Navigate().GoToUrl(URL);
             _driver.Manage().Window.Maximize();
-            ClickElement("addToEstimateButton");
-            ClickElement("computeEngineButton");
+            ClickElement(addToEstimateButton);
+            ClickElement(computeEngineButton);
         }
 
         public void FillForm()
         {
             ChangeNumberOfInstances("4");
-            SelectOption("operatingSystemDropdown", "operatingSystemOption");
-            ClickElement("provisioningRadioButton");
-            SelectOption("machineFamilyDropdown", "machineFamilyOption");
-            SelectOption("seriesDropdown", "seriesOption");
-            SelectOption("machineTypeDropdown", "machineTypeOption");
-            ClickElement("addGPUsButton");
-            SelectOption("gpuModelDropdown", "gpuModelOption");
-            SelectOption("numOfGPUsDropDown", "numOfGPUsOption");
-            SelectOption("storageDropdown", "storageOption");
-            SelectOption("regionDropdown", "regionOption");
+            SelectOption(operatingSystemDropdown, operatingSystemOption);
+            ClickElement(provisioningRadioButton);
+            SelectOption(machineFamilyDropdown, machineFamilyOption);
+            SelectOption(seriesDropdown, seriesOption);
+            SelectOption(machineTypeDropdown, machineTypeOption);
+            ClickElement(addGPUsButton);
+            SelectOption(gpuModelDropdown, gpuModelOption);
+            SelectOption(numOfGPUsDropDown, numOfGPUsOption);
+            SelectOption(storageDropdown, storageOption);
+            SelectOption(regionDropdown, regionOption);
+            OpenEstimateSummary();
+        }
 
-            ClickElement("shareButton");
-            ClickElement("openEstimateSummary");
-            CloseSecondTab();
-            ClickElement("shareButton");
-            ClickElement("openEstimateSummary");
-            SwitchToEstimateSummaryTab();
+        private void OpenEstimateSummary()
+        {
+            ClickElement(shareButton);
+            ClickElement(openEstimateSummary);
+            CloseExtraTabs();
+            ClickElement(shareButton);
+            ClickElement(openEstimateSummary);
+            SwitchToSummaryTab();
         }
 
         private void ChangeNumberOfInstances(string numInstances)
         {
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            var element = _driver.FindElement(locators["numOfInstances"]);
-            element.Clear();
-            element.SendKeys(numInstances);
+            numOfInstances.Clear();
+            numOfInstances.SendKeys(numInstances);
         }
 
-        private void ClickElement(string key)
+        private void ClickElement(IWebElement element)
         {
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            _driver.FindElement(locators[key]).Click();
+            element.Click();
         }
 
-        private void SelectOption(string dropdownKey, string optionKey)
+        private void SelectOption(IWebElement dropdown, IWebElement option)
         {
-            ClickElement(dropdownKey);
-            ClickElement(optionKey);
+            ClickElement(dropdown);
+            ClickElement(option);
         }
 
-        public void SwitchToEstimateSummaryTab()
+        private void SwitchToSummaryTab()
         {
+            _wait.Until(d => d.WindowHandles.Count > 1);
             var handles = _driver.WindowHandles;
             if (handles.Count > 1)
             {
                 _driver.SwitchTo().Window(handles[1]);
             }
-            System.Threading.Thread.Sleep(5000);
+            _wait.Until(ExpectedConditions.ElementExists(By.XPath("//h4[@class='QvLFl Nh2Phe D0aEmf']")));
         }
 
-        public void CloseSecondTab()
+        private void CloseExtraTabs()
         {
+            _wait.Until(d => d.WindowHandles.Count > 1);
             var handles = _driver.WindowHandles;
-            if (handles.Count == 2)
+            while (handles.Count > 1)
             {
-                _driver.SwitchTo().Window(handles[1]);
+                _driver.SwitchTo().Window(handles[handles.Count - 1]);
                 _driver.Close();
-                _driver.SwitchTo().Window(handles[0]);
+                handles = _driver.WindowHandles;
             }
-            System.Threading.Thread.Sleep(5000);
-        }
-
-        public Dictionary<string, string> GetSummaryValues()
-        {
-            return new Dictionary<string, string>
-            {
-                { "numInstances", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[10]")).Text },
-                { "operatingSystem", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[11]")).Text },
-                { "provisioningModel", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[12]")).Text },
-                { "machineType", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[3]")).Text },
-                { "gpuModel", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[5]")).Text },
-                { "numOfGPUs", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[6]")).Text },
-                { "storage", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[7]")).Text },
-                { "region", _driver.FindElement(By.XPath("(//span[@class='Kfvdz'])[18]")).Text }
-            };
+            _driver.SwitchTo().Window(handles[0]);
         }
     }
 }

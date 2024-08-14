@@ -10,6 +10,7 @@ namespace WebDriverTask3.Tests
     {
         private IWebDriver _driver;
         private GoogleCloudProductPricingPage _pricingPage;
+        private EstimateSummaryPage _summaryPage;
         private Dictionary<string, string> expectedValues;
 
         [SetUp]
@@ -17,6 +18,7 @@ namespace WebDriverTask3.Tests
         {
             _driver = new ChromeDriver();
             _pricingPage = new GoogleCloudProductPricingPage(_driver);
+            _summaryPage = new EstimateSummaryPage(_driver);
             _pricingPage.NavigateToPage();
             expectedValues = new Dictionary<string, string>
             {
@@ -36,7 +38,7 @@ namespace WebDriverTask3.Tests
         {
             _pricingPage.FillForm();
 
-            var summaryValues = _pricingPage.GetSummaryValues();
+            var summaryValues = _summaryPage.ExtractSummaryDetails();
 
             foreach (var key in expectedValues.Keys)
             {
@@ -49,6 +51,5 @@ namespace WebDriverTask3.Tests
         {
             _driver.Quit();
         }
-
     }
 }
