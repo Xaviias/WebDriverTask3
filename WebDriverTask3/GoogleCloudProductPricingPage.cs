@@ -12,10 +12,10 @@ namespace WebDriverTask3
 
         private const string URL = "https://cloud.google.com/products/calculator";
         #region Locators
-        [FindsBy(How = How.XPath, Using = "//button[@class='UywwFc-LgbsSe UywwFc-LgbsSe-OWXEXe-Bz112c-M1Soyc UywwFc-LgbsSe-OWXEXe-dgl2Hf xhASFc']")]
+        [FindsBy(How = How.XPath, Using = "//span[text()='Add to estimate']//parent::button")]
         private IWebElement addToEstimateButton;
 
-        [FindsBy(How = How.XPath, Using = "(//div[@role='button'])[2]")]
+        [FindsBy(How = How.XPath, Using = "//h2[text()='Compute Engine']//parent::div[@role='button']")]
         private IWebElement computeEngineButton;
 
         [FindsBy(How = How.XPath, Using = "//input[@value='1']")]
@@ -27,7 +27,7 @@ namespace WebDriverTask3
         [FindsBy(How = How.XPath, Using = "//li[@data-value='free-debian-centos-coreos-ubuntu-or-byol-bring-your-own-license']")]
         private IWebElement operatingSystemOption;
 
-        [FindsBy(How = How.XPath, Using = "//div[@class='xJ0wqe']")]
+        [FindsBy(How = How.XPath, Using = "//label[text()='Regular']")]
         private IWebElement provisioningRadioButton;
 
         [FindsBy(How = How.XPath, Using = "(//div[@class='VfPpkd-aPP78e'])[5]")]
